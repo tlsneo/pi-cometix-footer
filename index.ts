@@ -4,7 +4,7 @@
  * Borrows the "cometix" theme look from CCometixLine (MIT, Haleclipse):
  *   https://github.com/Haleclipse/CCometixLine
  *
- * Single line, " | " separators, adaptive icons, bold colored segments:
+ * Responsive layout with " | " separators, adaptive icons, bold colored segments:
  *   Model | Directory | Git(branch + ✓/●/⚠ + ↑n/↓n) | Context% | Tokens | Cost | Task time + TPS
  *
  * Toggle with /cometix-footer (on by default), or toggle TPS with
@@ -12,9 +12,10 @@
  */
 
 import type { ExtensionAPI, ReadonlyFooterDataProvider } from "@earendil-works/pi-coding-agent";
-import { truncateToWidth, visibleWidth, type TUI } from "@earendil-works/pi-tui";
+import { type TUI } from "@earendil-works/pi-tui";
 import { isAbsolute, relative, resolve, sep } from "node:path";
 import { formatDuration } from "./duration.ts";
+import { layoutFooterSegments } from "./footer-layout.ts";
 import { getIcons, type IconMode } from "./icons.ts";
 import { formatTps, TpsTracker } from "./tps.ts";
 
@@ -275,23 +276,15 @@ export default function (pi: ExtensionAPI) {
 					if (durationSeg) segs.push(durationSeg);
 					if (costSeg) segs.push(costSeg);
 
-					// extension/package statuses (e.g. MCP servers) — appended as a final segment on the same line
-					const statuses = footerData.getExtensionStatuses();
-					if (statuses.size > 0) {
-						const statusLine = Array.from(statuses.entries())
-							.sort(([a], [b]) => a.localeCompare(b))
-							.map(([, t]) => (t ?? "").replace(/[\r\n\t]/g, " ").replace(/ +/g, " ").trim())
-							.join(" ");
-						if (statusLine) {
-							segs.push(statusLine);
-						}
-					}
+					// Extension/package statuses participate as individual segments so
+					// narrow terminals can wrap between them instead of truncating all statuses.
+					const statusSegments = Array.from(footerData.getExtensionStatuses().entries())
+						.sort(([a], [b]) => a.localeCompare(b))
+						.map(([, text]) => (text ?? "").replace(/[\r\n\t]/g, " ").replace(/ +/g, " ").trim())
+						.filter((text) => text.length > 0);
+					segs.push(...statusSegments);
 
-					let line = segs.join(SEG);
-					if (visibleWidth(line) > width) {
-						line = truncateToWidth(line, width, "");
-					}
-					return [line];
+					return layoutFooterSegments(segs, width, SEG);
 				},
 			};
 		});

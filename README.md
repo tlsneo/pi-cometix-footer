@@ -4,7 +4,7 @@
 [![license](https://img.shields.io/npm/l/pi-cometix-footer?style=flat-square)](./LICENSE)
 [![pi package](https://img.shields.io/badge/pi-package-8b5cf6?style=flat-square)](https://pi.dev)
 
-Single-line **cometix-style** footer for [pi](https://pi.dev) — model, path, git, context window, session tokens, latest-response throughput, cost, and task time at a glance.
+Responsive **cometix-style** footer for [pi](https://pi.dev) — model, path, git, context window, session tokens, latest-response throughput, cost, and task time at a glance.
 
 Look inspired by [CCometixLine](https://github.com/Haleclipse/CCometixLine) (MIT). Independent pi extension; own codebase.
 
@@ -29,7 +29,9 @@ Look inspired by [CCometixLine](https://github.com/Haleclipse/CCometixLine) (MIT
 | **Activity** | Live task time (updated every second) + optional latest-response TPS; final values remain after the agent settles | magenta |
 | **Statuses** | Extension / MCP status lines (if any) | theme default |
 
-Segments are bold, separated by dim ` | `. Icon mode defaults to `"auto"`: Apple Terminal uses single-cell Unicode symbols compatible with its default Menlo font, while other terminals keep Nerd Font icons. Unicode, Nerd Font, and emoji modes can also be selected explicitly.
+Segments are bold, separated by dim ` | `. The footer stays on one line when everything fits; on narrower terminals it greedily wraps between complete segments, preserving values such as cost and activity instead of clipping the right side. A single segment wider than the terminal is safely truncated. Resizing the terminal automatically reflows the layout.
+
+Icon mode defaults to `"auto"`: Apple Terminal uses single-cell Unicode symbols compatible with its default Menlo font, while other terminals keep Nerd Font icons. Unicode, Nerd Font, and emoji modes can also be selected explicitly.
 
 ---
 
@@ -74,6 +76,7 @@ Edit the installed package (or a local clone), then `/reload`.
 | Knob | Where | Purpose |
 | --- | --- | --- |
 | `ICON_MODE` | top of `index.ts` | `"auto"` (default), `"nerd"`, `"unicode"`, or `"emoji"` |
+| `layoutFooterSegments` | `footer-layout.ts` | responsive, ANSI-safe segment wrapping and oversized-segment truncation |
 | `DEFAULT_SHOW_TPS` | top of `index.ts` | show latest-response TPS by default (`true`) |
 | `ICON_SETS.nerd.*` | `icons.ts` | per-segment Nerd Font codepoints |
 | `C.*` | color map | 16-color SGR codes per segment |
