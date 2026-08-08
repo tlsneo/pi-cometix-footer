@@ -29,7 +29,7 @@ Look inspired by [CCometixLine](https://github.com/Haleclipse/CCometixLine) (MIT
 | **Activity** | Live task time (updated every second) + optional latest-response TPS; final values remain after the agent settles | magenta |
 | **Statuses** | Extension / MCP status lines (if any) | theme default |
 
-Segments are bold, separated by dim ` | `, with Nerd Font icons (emoji fallback available).
+Segments are bold, separated by dim ` | `. Icon mode defaults to `"auto"`: Apple Terminal uses single-cell Unicode symbols compatible with its default Menlo font, while other terminals keep Nerd Font icons. Unicode, Nerd Font, and emoji modes can also be selected explicitly.
 
 ---
 
@@ -73,9 +73,9 @@ Edit the installed package (or a local clone), then `/reload`.
 
 | Knob | Where | Purpose |
 | --- | --- | --- |
-| `ICON_MODE` | top of `index.ts` | `"nerd"` (default) or `"emoji"` if no Nerd Font |
+| `ICON_MODE` | top of `index.ts` | `"auto"` (default), `"nerd"`, `"unicode"`, or `"emoji"` |
 | `DEFAULT_SHOW_TPS` | top of `index.ts` | show latest-response TPS by default (`true`) |
-| `ICONS.nerd.*` | icon map | per-segment Nerd Font codepoints |
+| `ICON_SETS.nerd.*` | `icons.ts` | per-segment Nerd Font codepoints |
 | `C.*` | color map | 16-color SGR codes per segment |
 | `GIT_TTL` | near git cache | git status refresh interval (ms, default `3000`) |
 
@@ -93,7 +93,7 @@ pi install ./pi-cometix-footer
 ## Requirements
 
 - [pi](https://pi.dev) (peer: `@earendil-works/pi-coding-agent`, `@earendil-works/pi-tui`)
-- A [Nerd Font](https://www.nerdfonts.com/) in your terminal — or set `ICON_MODE = "emoji"`
+- A Nerd Font is optional. In `"auto"` mode, Apple Terminal falls back to Menlo-compatible Unicode symbols. Use `"nerd"` for patched fonts, `"unicode"` for a font-safe single-cell fallback, or `"emoji"` for colorful icons.
 
 ---
 

@@ -4,7 +4,7 @@
  * Borrows the "cometix" theme look from CCometixLine (MIT, Haleclipse):
  *   https://github.com/Haleclipse/CCometixLine
  *
- * Single line, " | " separators, Nerd Font icons, bold colored segments:
+ * Single line, " | " separators, adaptive icons, bold colored segments:
  *   Model | Directory | Git(branch + ✓/●/⚠ + ↑n/↓n) | Context% | Tokens | Cost | Task time + TPS
  *
  * Toggle with /cometix-footer (on by default), or toggle TPS with
@@ -15,34 +15,15 @@ import type { ExtensionAPI, ReadonlyFooterDataProvider } from "@earendil-works/p
 import { truncateToWidth, visibleWidth, type TUI } from "@earendil-works/pi-tui";
 import { isAbsolute, relative, resolve, sep } from "node:path";
 import { formatDuration } from "./duration.ts";
+import { getIcons, type IconMode } from "./icons.ts";
 import { formatTps, TpsTracker } from "./tps.ts";
 
 // --- icon set ---------------------------------------------------------------
-// Set to "emoji" if your terminal has no Nerd Font (icons become 🤖 📁 🌿 ⚡ 📊 💰).
-const ICON_MODE: "nerd" | "emoji" = "nerd";
+// "auto" uses ordinary Unicode in Apple Terminal (whose default Menlo font
+// lacks Nerd Font private-use glyphs) and Nerd Font icons elsewhere.
+const ICON_MODE: IconMode = "auto";
+const ICONS = getIcons(ICON_MODE);
 const DEFAULT_SHOW_TPS = true;
-
-const cp = (n: number) => String.fromCodePoint(n);
-const ICONS = {
-	nerd: {
-		model: "\ue22c", // nf-fae-pi
-		dir: "\ue285", // nf-fae-bigger
-		git: cp(0xf02a2), // nf-md-git
-		ctx: "\uf49b", // nf-md-counter
-		usage: cp(0xf0a9e), // nf-md-chart_bar
-		cost: cp(0xf01c1), // nf-md-currency_usd
-		duration: cp(0xf0109), // nf-md-camera_timer
-	},
-	emoji: {
-		model: "🤖",
-		dir: "📁",
-		git: "🌿",
-		ctx: "⚡️",
-		usage: "📊",
-		cost: "💰",
-		duration: "⏱️",
-	},
-}[ICON_MODE];
 
 // --- ANSI helpers (truecolor terminal) --------------------------------------
 const RESET = "\x1b[0m";
