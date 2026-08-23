@@ -16,13 +16,13 @@
   ],
   "license": "MIT",
   "author": "Xichun123",
-  "homepage": "https://github.com/Xichun123/pi-cometix-footer#readme",
+  "homepage": "https://github.com/tlsneo/pi-cometix-footer#readme",
   "bugs": {
-    "url": "https://github.com/Xichun123/pi-cometix-footer/issues"
+    "url": "https://github.com/tlsneo/pi-cometix-footer/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Xichun123/pi-cometix-footer.git"
+    "url": "git+https://github.com/tlsneo/pi-cometix-footer.git"
   },
   "scripts": {
     "test": "node --test *.test.ts"

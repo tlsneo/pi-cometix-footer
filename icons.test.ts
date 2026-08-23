@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getIcons, resolveIconMode } from "./icons.ts";
+import { getFooterSymbols, getIcons, parseIconMode, resolveIconMode } from "./icons.ts";
 
 const containsPrivateUseCodePoint = (value: string): boolean =>
 	Array.from(value).some((character) => {
@@ -12,16 +12,37 @@ const containsPrivateUseCodePoint = (value: string): boolean =>
 		);
 	});
 
-test("automatically avoids Nerd Font private-use glyphs in Apple Terminal", () => {
-	const env = { TERM_PROGRAM: "Apple_Terminal" };
+test("uses printable ASCII symbols in conservative auto mode", () => {
+	assert.equal(resolveIconMode("auto"), "ascii");
+	const symbols = getFooterSymbols("auto");
+	const values = [
+		...Object.values(symbols.icons),
+		symbols.thinkingSeparator,
+		symbols.activitySeparator,
+		...Object.values(symbols.git),
+		...Object.values(symbols.tokens),
+	];
 
-	assert.equal(resolveIconMode("auto", env), "unicode");
-	assert.equal(Object.values(getIcons("auto", env)).some(containsPrivateUseCodePoint), false);
+	for (const value of values) {
+		assert.match(value, /^[\x20-\x7e]+$/);
+	}
+	assert.equal(values.some(containsPrivateUseCodePoint), false);
 });
 
-test("keeps Nerd Font icons elsewhere and allows explicit overrides", () => {
-	assert.equal(resolveIconMode("auto", { TERM_PROGRAM: "iTerm.app" }), "nerd");
-	assert.equal(resolveIconMode("nerd", { TERM_PROGRAM: "Apple_Terminal" }), "nerd");
-	assert.equal(resolveIconMode("emoji", { TERM_PROGRAM: "Apple_Terminal" }), "emoji");
-	assert.equal(resolveIconMode("unicode", { TERM_PROGRAM: "iTerm.app" }), "unicode");
+test("allows explicit richer icon modes", () => {
+	assert.equal(resolveIconMode("ascii"), "ascii");
+	assert.equal(resolveIconMode("nerd"), "nerd");
+	assert.equal(resolveIconMode("unicode"), "unicode");
+	assert.equal(resolveIconMode("emoji"), "emoji");
+	assert.equal(Object.values(getIcons("nerd")).some(containsPrivateUseCodePoint), true);
+	assert.equal(Object.values(getIcons("unicode")).some(containsPrivateUseCodePoint), false);
+});
+
+test("parses environment configuration and falls back safely", () => {
+	assert.equal(parseIconMode(" ASCII "), "ascii");
+	assert.equal(parseIconMode("nerd"), "nerd");
+	assert.equal(parseIconMode("unicode"), "unicode");
+	assert.equal(parseIconMode("emoji"), "emoji");
+	assert.equal(parseIconMode(undefined), "auto");
+	assert.equal(parseIconMode("unknown"), "auto");
 });

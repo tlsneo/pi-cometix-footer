@@ -14,24 +14,26 @@ Look inspired by [CCometixLine](https://github.com/Haleclipse/CCometixLine) (MIT
 
 ![cometix footer demo](assets/demo.png)
 
+_The screenshot uses optional Nerd Font mode. The portable default is ASCII:_
+
 ```text
-π  GPT-5.6 Sol • max  |  > ~/agent/pi-cometix-footer  |  main ✓  |  2% 6.4k/372k  |  ↑13k ↓61 CH88.2%  |  󰄉 1m 23s · 42.3 tok/s  |  󰇁 0.284  |  MCP: 0/5 servers
+AI  GPT-5.6 Sol - max  |  > ~/agent/pi-cometix-footer  |  git main ok  |  ctx 2% 6.4k/372k  |  tok in:13k out:61 CH88.2%  |  time 1m 23s / 42.3 tok/s  |  $ 0.284  |  MCP: 0/5 servers
 ```
 
 | Segment | What it shows | Color |
 | --- | --- | --- |
-| **Model** | Model name + thinking level (`• high`) | cyan · level uses pi palette |
-| **Directory** | CWD, `~`-relative | yellow icon / green path |
-| **Git** | Branch · clean `✓` / dirty `●` / conflict `⚠` · ahead `↑n` / behind `↓n` | blue |
+| **Model** | Model name + thinking level (`- high` in ASCII mode) | cyan · level uses pi palette |
+| **Directory** | CWD, `~`-relative | yellow label / green path |
+| **Git** | Branch · clean `ok` / dirty `*` / conflict `!` · ahead `+n` / behind `-n` in ASCII mode | blue |
 | **Context** | Window fill `pct tokens/window` | magenta → yellow (>70%) → red (>90%) |
-| **Tokens** | Session `↑in ↓out` + latest cache hit `CH%` | cyan |
-| **Cost** | Session cumulative USD cost reported by Pi (`󰇁 0.000`); omitted when zero/unavailable | yellow |
+| **Tokens** | Session `in:n out:n` + latest cache hit `CH%` in ASCII mode | cyan |
+| **Cost** | Session cumulative USD cost reported by Pi (`$ 0.000` in ASCII mode); omitted when zero/unavailable | yellow |
 | **Activity** | Live task time (updated every second) + optional latest-response TPS; final values remain after the agent settles | magenta |
 | **Statuses** | Extension / MCP status lines (if any) | theme default |
 
 Segments are bold, separated by dim ` | `. The footer stays on one line when everything fits; on narrower terminals it greedily wraps between complete segments, preserving values such as cost and activity instead of clipping the right side. A single segment wider than the terminal is safely truncated. Resizing the terminal automatically reflows the layout.
 
-Icon mode defaults to `"auto"`: Apple Terminal uses single-cell Unicode symbols compatible with its default Menlo font, while other terminals keep Nerd Font icons. Unicode, Nerd Font, and emoji modes can also be selected explicitly.
+Icon mode defaults to conservative `"auto"`, which resolves to printable ASCII because terminal applications cannot reliably detect the active font's glyph support. Unicode, Nerd Font, and emoji modes remain available as explicit opt-ins.
 
 ---
 
@@ -44,7 +46,7 @@ pi install npm:pi-cometix-footer
 Or from git:
 
 ```bash
-pi install git:github.com/Xichun123/pi-cometix-footer
+pi install git:github.com/tlsneo/pi-cometix-footer
 ```
 
 Then in pi:
@@ -75,19 +77,27 @@ Edit the installed package (or a local clone), then `/reload`.
 
 | Knob | Where | Purpose |
 | --- | --- | --- |
-| `ICON_MODE` | top of `index.ts` | `"auto"` (default), `"nerd"`, `"unicode"`, or `"emoji"` |
+| `PI_COMETIX_ICON_MODE` | environment | `auto`/`ascii` (portable default), `nerd`, `unicode`, or `emoji` |
 | `layoutFooterSegments` | `footer-layout.ts` | responsive, ANSI-safe segment wrapping and oversized-segment truncation |
 | `DEFAULT_SHOW_TPS` | top of `index.ts` | show latest-response TPS by default (`true`) |
-| `ICON_SETS.nerd.*` | `icons.ts` | per-segment Nerd Font codepoints |
+| `SYMBOL_SETS` | `icons.ts` | customize ASCII, Unicode, Nerd Font, or emoji symbols |
 | `C.*` | color map | 16-color SGR codes per segment |
 | `GIT_TTL` | near git cache | git status refresh interval (ms, default `3000`) |
 
-Nerd Font cheatsheet: <https://www.nerdfonts.com/cheat-sheet>
+To opt into richer symbols, start pi with one of:
+
+```bash
+PI_COMETIX_ICON_MODE=nerd pi
+PI_COMETIX_ICON_MODE=unicode pi
+PI_COMETIX_ICON_MODE=emoji pi
+```
+
+Nerd Font mode requires a compatible terminal font. Nerd Font cheatsheet: <https://www.nerdfonts.com/cheat-sheet>
 
 Local install for hacking:
 
 ```bash
-git clone https://github.com/Xichun123/pi-cometix-footer.git
+git clone https://github.com/tlsneo/pi-cometix-footer.git
 pi install ./pi-cometix-footer
 ```
 
@@ -96,7 +106,8 @@ pi install ./pi-cometix-footer
 ## Requirements
 
 - [pi](https://pi.dev) (peer: `@earendil-works/pi-coding-agent`, `@earendil-works/pi-tui`)
-- A Nerd Font is optional. In `"auto"` mode, Apple Terminal falls back to Menlo-compatible Unicode symbols. Use `"nerd"` for patched fonts, `"unicode"` for a font-safe single-cell fallback, or `"emoji"` for colorful icons.
+- No special terminal font is required in the default `"auto"`/`"ascii"` mode
+- Use `"nerd"` only with a patched Nerd Font, `"unicode"` with a suitable Unicode font, or `"emoji"` with emoji-capable terminals
 
 ---
 

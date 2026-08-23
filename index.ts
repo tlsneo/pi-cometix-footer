@@ -4,8 +4,8 @@
  * Borrows the "cometix" theme look from CCometixLine (MIT, Haleclipse):
  *   https://github.com/Haleclipse/CCometixLine
  *
- * Responsive layout with " | " separators, adaptive icons, bold colored segments:
- *   Model | Directory | Git(branch + ✓/●/⚠ + ↑n/↓n) | Context% | Tokens | Cost | Task time + TPS
+ * Responsive layout with " | " separators, portable ASCII labels by default:
+ *   Model | Directory | Git(branch + state + sync) | Context% | Tokens | Cost | Task time + TPS
  *
  * Toggle with /cometix-footer (on by default), or toggle TPS with
  * /cometix-footer tps. /reload to pick up edits.
@@ -16,14 +16,15 @@ import { type TUI } from "@earendil-works/pi-tui";
 import { isAbsolute, relative, resolve, sep } from "node:path";
 import { formatDuration } from "./duration.ts";
 import { layoutFooterSegments } from "./footer-layout.ts";
-import { getIcons, type IconMode } from "./icons.ts";
+import { getFooterSymbols, parseIconMode } from "./icons.ts";
 import { formatTps, TpsTracker } from "./tps.ts";
 
 // --- icon set ---------------------------------------------------------------
-// "auto" uses ordinary Unicode in Apple Terminal (whose default Menlo font
-// lacks Nerd Font private-use glyphs) and Nerd Font icons elsewhere.
-const ICON_MODE: IconMode = "auto";
-const ICONS = getIcons(ICON_MODE);
+// Auto is deliberately conservative because terminals cannot reliably report
+// font glyph support. Override with PI_COMETIX_ICON_MODE when desired.
+const ICON_MODE = parseIconMode(process.env.PI_COMETIX_ICON_MODE);
+const SYMBOLS = getFooterSymbols(ICON_MODE);
+const ICONS = SYMBOLS.icons;
 const DEFAULT_SHOW_TPS = true;
 
 // --- ANSI helpers (truecolor terminal) --------------------------------------
@@ -198,7 +199,7 @@ export default function (pi: ExtensionAPI) {
 						// color the level with pi's thinking palette (matches editor border)
 						const lvlToken = `thinking${lvl.charAt(0).toUpperCase()}${lvl.slice(1)}`;
 						const lvlStr = theme.fg(lvlToken, lvl);
-						modelSeg = `\x1b[1;${C.cyan}m${ICONS.model}  ${modelId}${RESET}\x1b[2m • ${RESET}${lvlStr}${RESET}`;
+						modelSeg = `\x1b[1;${C.cyan}m${ICONS.model}  ${modelId}${RESET}\x1b[2m${SYMBOLS.thinkingSeparator}${RESET}${lvlStr}${RESET}`;
 					} else {
 						modelSeg = paint(C.cyan, `${ICONS.model}  ${modelId}`);
 					}
@@ -212,12 +213,12 @@ export default function (pi: ExtensionAPI) {
 					let gitSeg = "";
 					if (branch) {
 						const g = gitCache.data;
-						let st = " ✓";
-						if (g.conflicts) st = " ⚠";
-						else if (g.dirty) st = " ●";
+						let st = ` ${SYMBOLS.git.clean}`;
+						if (g.conflicts) st = ` ${SYMBOLS.git.conflict}`;
+						else if (g.dirty) st = ` ${SYMBOLS.git.dirty}`;
 						let remote = "";
-						if (g.ahead > 0) remote += ` ↑${g.ahead}`;
-						if (g.behind > 0) remote += ` ↓${g.behind}`;
+						if (g.ahead > 0) remote += ` ${SYMBOLS.git.ahead}${g.ahead}`;
+						if (g.behind > 0) remote += ` ${SYMBOLS.git.behind}${g.behind}`;
 						gitSeg = paint(C.blue, `${ICONS.git} ${branch}${st}${remote}`);
 					}
 
@@ -253,7 +254,7 @@ export default function (pi: ExtensionAPI) {
 							}
 						}
 					}
-					let tokText = `${ICONS.usage} ↑${fmtTok(tin)} ↓${fmtTok(tout)}`;
+					let tokText = `${ICONS.usage} ${SYMBOLS.tokens.input}${fmtTok(tin)} ${SYMBOLS.tokens.output}${fmtTok(tout)}`;
 					if ((totalCR > 0 || totalCW > 0) && lastHit != null) {
 						tokText += ` CH${lastHit.toFixed(1)}%`;
 					}
@@ -266,7 +267,7 @@ export default function (pi: ExtensionAPI) {
 							? `${ICONS.duration} ${formatDuration(displayedTaskDurationMs)}`
 							: "";
 					if (tpsEnabled && latestTps != null) {
-						durationText += `${durationText ? " · " : ""}${formatTps(latestTps)} tok/s`;
+						durationText += `${durationText ? SYMBOLS.activitySeparator : ""}${formatTps(latestTps)} tok/s`;
 					}
 					const durationSeg = durationText ? paint(C.duration, durationText) : "";
 
