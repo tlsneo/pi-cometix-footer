@@ -11,22 +11,21 @@ Look inspired by [CCometixLine](https://github.com/Haleclipse/CCometixLine) (MIT
 
 ## Preview
 
-![cometix footer demo](assets/demo.png)
-
-_The screenshot uses optional Nerd Font mode. The portable default is ASCII:_
+Default ASCII mode uses compact bracketed symbols and requires no special font. On narrower terminals, complete segments wrap instead of being clipped:
 
 ```text
-@  GPT-5.6 Sol - max  |  > ~/agent/pi-cometix-footer  |  # main +  |  % 2% 6.4k/372k  |  <> ^13k v61 CH88.2%  |  ~ 1m 23s / 42.3 tok/s  |  $ 0.284  |  MCP: 0/5 servers
+[@]  GPT-5.6 Sol - max  |  [>] ~/pi-cometix-footer  |  [#] main +
+[%] 49% 123k/250k  |  [<>] ^13k v61 CH88.2%  |  [~] 1m 23s / 42.3 tok/s  |  [$] 0.284
 ```
 
 | Segment | What it shows | Color |
 | --- | --- | --- |
-| **Model** | `@` + model name + thinking level (`- high` in ASCII mode) | cyan · level uses pi palette |
-| **Directory** | `>` + CWD, `~`-relative | yellow symbol / green path |
-| **Git** | `#` + branch · clean `+` / dirty `*` / conflict `!` · ahead `^n` / behind `vn` | blue |
-| **Context** | `%` + window fill `pct tokens/window` | magenta → yellow (>70%) → red (>90%) |
-| **Tokens** | `<>` + session `^input voutput` + latest cache hit `CH%` | cyan |
-| **Cost** | `$` + session cumulative USD cost reported by Pi; omitted when zero/unavailable | yellow |
+| **Model** | `[@]` + model name + thinking level (`- high` in ASCII mode) | cyan · level uses pi palette |
+| **Directory** | `[>]` + CWD, `~`-relative | yellow symbol / green path |
+| **Git** | `[#]` + branch · clean `+` / dirty `*` / conflict `!` · ahead `^n` / behind `vn` | blue |
+| **Context** | `[%]` + window fill `pct tokens/window` | magenta → yellow (>70%) → red (>90%) |
+| **Tokens** | `[<>]` + session `^input voutput` + latest cache hit `CH%` | cyan |
+| **Cost** | `[$]` + session cumulative USD cost reported by Pi; omitted when zero/unavailable | yellow |
 | **Activity** | Live task time (updated every second) + optional latest-response TPS; final values remain after the agent settles | magenta |
 | **Statuses** | Extension / MCP status lines (if any) | theme default |
 

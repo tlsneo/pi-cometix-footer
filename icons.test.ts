@@ -27,13 +27,13 @@ test("uses printable ASCII symbols in conservative auto mode", () => {
 		assert.match(value, /^[\x20-\x7e]+$/);
 	}
 	assert.deepEqual(symbols.icons, {
-		model: "@",
-		dir: ">",
-		git: "#",
-		ctx: "%",
-		usage: "<>",
-		cost: "$",
-		duration: "~",
+		model: "[@]",
+		dir: "[>]",
+		git: "[#]",
+		ctx: "[%]",
+		usage: "[<>]",
+		cost: "[$]",
+		duration: "[~]",
 	});
 	assert.deepEqual(symbols.git, { clean: "+", dirty: "*", conflict: "!", ahead: "^", behind: "v" });
 	assert.deepEqual(symbols.tokens, { input: "^", output: "v" });
