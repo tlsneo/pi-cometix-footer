@@ -4,7 +4,7 @@
  * Borrows the "cometix" theme look from CCometixLine (MIT, Haleclipse):
  *   https://github.com/Haleclipse/CCometixLine
  *
- * Responsive layout with " | " separators, portable ASCII labels by default:
+ * Responsive layout with " | " separators, portable ASCII symbols by default:
  *   Model | Directory | Git(branch + state + sync) | Context% | Tokens | Cost | Task time + TPS
  *
  * Toggle with /cometix-footer (on by default), or toggle TPS with

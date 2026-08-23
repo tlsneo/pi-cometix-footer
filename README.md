@@ -1,6 +1,5 @@
 # pi-cometix-footer
 
-[![npm](https://img.shields.io/npm/v/pi-cometix-footer?style=flat-square)](https://www.npmjs.com/package/pi-cometix-footer)
 [![license](https://img.shields.io/npm/l/pi-cometix-footer?style=flat-square)](./LICENSE)
 [![pi package](https://img.shields.io/badge/pi-package-8b5cf6?style=flat-square)](https://pi.dev)
 
@@ -17,17 +16,17 @@ Look inspired by [CCometixLine](https://github.com/Haleclipse/CCometixLine) (MIT
 _The screenshot uses optional Nerd Font mode. The portable default is ASCII:_
 
 ```text
-AI  GPT-5.6 Sol - max  |  > ~/agent/pi-cometix-footer  |  git main ok  |  ctx 2% 6.4k/372k  |  tok in:13k out:61 CH88.2%  |  time 1m 23s / 42.3 tok/s  |  $ 0.284  |  MCP: 0/5 servers
+@  GPT-5.6 Sol - max  |  > ~/agent/pi-cometix-footer  |  # main +  |  % 2% 6.4k/372k  |  <> ^13k v61 CH88.2%  |  ~ 1m 23s / 42.3 tok/s  |  $ 0.284  |  MCP: 0/5 servers
 ```
 
 | Segment | What it shows | Color |
 | --- | --- | --- |
-| **Model** | Model name + thinking level (`- high` in ASCII mode) | cyan · level uses pi palette |
-| **Directory** | CWD, `~`-relative | yellow label / green path |
-| **Git** | Branch · clean `ok` / dirty `*` / conflict `!` · ahead `+n` / behind `-n` in ASCII mode | blue |
-| **Context** | Window fill `pct tokens/window` | magenta → yellow (>70%) → red (>90%) |
-| **Tokens** | Session `in:n out:n` + latest cache hit `CH%` in ASCII mode | cyan |
-| **Cost** | Session cumulative USD cost reported by Pi (`$ 0.000` in ASCII mode); omitted when zero/unavailable | yellow |
+| **Model** | `@` + model name + thinking level (`- high` in ASCII mode) | cyan · level uses pi palette |
+| **Directory** | `>` + CWD, `~`-relative | yellow symbol / green path |
+| **Git** | `#` + branch · clean `+` / dirty `*` / conflict `!` · ahead `^n` / behind `vn` | blue |
+| **Context** | `%` + window fill `pct tokens/window` | magenta → yellow (>70%) → red (>90%) |
+| **Tokens** | `<>` + session `^input voutput` + latest cache hit `CH%` | cyan |
+| **Cost** | `$` + session cumulative USD cost reported by Pi; omitted when zero/unavailable | yellow |
 | **Activity** | Live task time (updated every second) + optional latest-response TPS; final values remain after the agent settles | magenta |
 | **Statuses** | Extension / MCP status lines (if any) | theme default |
 
@@ -38,12 +37,6 @@ Icon mode defaults to conservative `"auto"`, which resolves to printable ASCII b
 ---
 
 ## Install
-
-```bash
-pi install npm:pi-cometix-footer
-```
-
-Or from git:
 
 ```bash
 pi install git:github.com/tlsneo/pi-cometix-footer

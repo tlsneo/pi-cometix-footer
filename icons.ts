@@ -35,26 +35,26 @@ const SYMBOL_SETS: Record<ResolvedIconMode, FooterSymbols> = {
 	// operating systems, SSH clients, containers, and non-UTF-8 locales.
 	ascii: {
 		icons: {
-			model: "AI",
+			model: "@",
 			dir: ">",
-			git: "git",
-			ctx: "ctx",
-			usage: "tok",
+			git: "#",
+			ctx: "%",
+			usage: "<>",
 			cost: "$",
-			duration: "time",
+			duration: "~",
 		},
 		thinkingSeparator: " - ",
 		activitySeparator: " / ",
 		git: {
-			clean: "ok",
+			clean: "+",
 			dirty: "*",
 			conflict: "!",
-			ahead: "+",
-			behind: "-",
+			ahead: "^",
+			behind: "v",
 		},
 		tokens: {
-			input: "in:",
-			output: "out:",
+			input: "^",
+			output: "v",
 		},
 	},
 	nerd: {
