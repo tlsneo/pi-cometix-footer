@@ -11,27 +11,26 @@ Look inspired by [CCometixLine](https://github.com/Haleclipse/CCometixLine) (MIT
 
 ## Preview
 
-Default ASCII mode uses compact bracketed symbols and requires no special font. On narrower terminals, complete segments wrap instead of being clipped:
+![cometix footer demo](assets/demo.png)
 
 ```text
-[@]  GPT-5.6 Sol - max  |  [>] ~/pi-cometix-footer  |  [#] main +
-[%] 49% 123k/250k  |  [<>] ^13k v61 CH88.2%  |  [~] 1m 23s / 42.3 tok/s  |  [$] 0.284
+π  GPT-5.6 Sol • max  |  > ~/agent/pi-cometix-footer  |  main ✓  |  2% 6.4k/372k  |  ↑13k ↓61 CH88.2%  |  󰄉 1m 23s · 42.3 tok/s  |  󰇁 0.284  |  MCP: 0/5 servers
 ```
 
 | Segment | What it shows | Color |
 | --- | --- | --- |
-| **Model** | `[@]` + model name + thinking level (`- high` in ASCII mode) | cyan · level uses pi palette |
-| **Directory** | `[>]` + CWD, `~`-relative | yellow symbol / green path |
-| **Git** | `[#]` + branch · clean `+` / dirty `*` / conflict `!` · ahead `^n` / behind `vn` | blue |
-| **Context** | `[%]` + window fill `pct tokens/window` | magenta → yellow (>70%) → red (>90%) |
-| **Tokens** | `[<>]` + session `^input voutput` + latest cache hit `CH%` | cyan |
-| **Cost** | `[$]` + session cumulative USD cost reported by Pi; omitted when zero/unavailable | yellow |
+| **Model** | Model name + thinking level (`• high`) | cyan · level uses pi palette |
+| **Directory** | CWD, `~`-relative | yellow icon / green path |
+| **Git** | Branch · clean `✓` / dirty `●` / conflict `⚠` · ahead `↑n` / behind `↓n` | blue |
+| **Context** | Window fill `pct tokens/window` | magenta → yellow (>70%) → red (>90%) |
+| **Tokens** | Session `↑in ↓out` + latest cache hit `CH%` | cyan |
+| **Cost** | Session cumulative USD cost reported by Pi; omitted when zero/unavailable | yellow |
 | **Activity** | Live task time (updated every second) + optional latest-response TPS; final values remain after the agent settles | magenta |
 | **Statuses** | Extension / MCP status lines (if any) | theme default |
 
 Segments are bold, separated by dim ` | `. The footer stays on one line when everything fits; on narrower terminals it greedily wraps between complete segments, preserving values such as cost and activity instead of clipping the right side. A single segment wider than the terminal is safely truncated. Resizing the terminal automatically reflows the layout.
 
-Icon mode defaults to conservative `"auto"`, which resolves to printable ASCII because terminal applications cannot reliably detect the active font's glyph support. Unicode, Nerd Font, and emoji modes remain available as explicit opt-ins.
+Icon mode defaults to `"auto"`: Linux uses the portable ASCII fallback, Apple Terminal uses Menlo-compatible Unicode symbols, and other environments preserve the original Nerd Font appearance. Every mode can also be selected explicitly.
 
 ---
 
@@ -69,7 +68,7 @@ Edit the installed package (or a local clone), then `/reload`.
 
 | Knob | Where | Purpose |
 | --- | --- | --- |
-| `PI_COMETIX_ICON_MODE` | environment | `auto`/`ascii` (portable default), `nerd`, `unicode`, or `emoji` |
+| `PI_COMETIX_ICON_MODE` | environment | `auto` (platform-aware default), `ascii`, `nerd`, `unicode`, or `emoji` |
 | `layoutFooterSegments` | `footer-layout.ts` | responsive, ANSI-safe segment wrapping and oversized-segment truncation |
 | `DEFAULT_SHOW_TPS` | top of `index.ts` | show latest-response TPS by default (`true`) |
 | `SYMBOL_SETS` | `icons.ts` | customize ASCII, Unicode, Nerd Font, or emoji symbols |
@@ -98,8 +97,9 @@ pi install ./pi-cometix-footer
 ## Requirements
 
 - [pi](https://pi.dev) (peer: `@earendil-works/pi-coding-agent`, `@earendil-works/pi-tui`)
-- No special terminal font is required in the default `"auto"`/`"ascii"` mode
-- Use `"nerd"` only with a patched Nerd Font, `"unicode"` with a suitable Unicode font, or `"emoji"` with emoji-capable terminals
+- Linux needs no special font in default `"auto"` mode because it uses ASCII symbols
+- Apple Terminal automatically uses a Menlo-compatible Unicode fallback
+- Other environments retain the original Nerd Font appearance; use `PI_COMETIX_ICON_MODE=ascii` when a patched font is unavailable
 
 ---
 

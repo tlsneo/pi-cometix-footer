@@ -145,17 +145,33 @@ export function parseIconMode(value: string | undefined): IconMode {
 	return "auto";
 }
 
-export function resolveIconMode(mode: IconMode): ResolvedIconMode {
-	// There is no reliable terminal protocol for detecting whether the active
-	// font contains a glyph. Keep auto conservative and let users explicitly
-	// opt into richer modes.
-	return mode === "auto" ? "ascii" : mode;
+export function resolveIconMode(
+	mode: IconMode,
+	env: Readonly<Record<string, string | undefined>> = process.env,
+	platform: NodeJS.Platform = process.platform,
+): ResolvedIconMode {
+	if (mode !== "auto") return mode;
+
+	// Linux commonly uses an unpatched default monospace font, so keep its
+	// automatic fallback ASCII-only. Preserve the original richer appearance
+	// elsewhere, with a Unicode fallback for Apple Terminal's default Menlo.
+	if (platform === "linux") return "ascii";
+	if (platform === "darwin" && env.TERM_PROGRAM === "Apple_Terminal") return "unicode";
+	return "nerd";
 }
 
-export function getFooterSymbols(mode: IconMode): FooterSymbols {
-	return SYMBOL_SETS[resolveIconMode(mode)];
+export function getFooterSymbols(
+	mode: IconMode,
+	env: Readonly<Record<string, string | undefined>> = process.env,
+	platform: NodeJS.Platform = process.platform,
+): FooterSymbols {
+	return SYMBOL_SETS[resolveIconMode(mode, env, platform)];
 }
 
-export function getIcons(mode: IconMode): FooterIcons {
-	return getFooterSymbols(mode).icons;
+export function getIcons(
+	mode: IconMode,
+	env: Readonly<Record<string, string | undefined>> = process.env,
+	platform: NodeJS.Platform = process.platform,
+): FooterIcons {
+	return getFooterSymbols(mode, env, platform).icons;
 }

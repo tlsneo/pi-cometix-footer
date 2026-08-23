@@ -4,7 +4,7 @@
  * Borrows the "cometix" theme look from CCometixLine (MIT, Haleclipse):
  *   https://github.com/Haleclipse/CCometixLine
  *
- * Responsive layout with " | " separators, portable ASCII symbols by default:
+ * Responsive layout with " | " separators and platform-aware icon fallback:
  *   Model | Directory | Git(branch + state + sync) | Context% | Tokens | Cost | Task time + TPS
  *
  * Toggle with /cometix-footer (on by default), or toggle TPS with
@@ -20,8 +20,8 @@ import { getFooterSymbols, parseIconMode } from "./icons.ts";
 import { formatTps, TpsTracker } from "./tps.ts";
 
 // --- icon set ---------------------------------------------------------------
-// Auto is deliberately conservative because terminals cannot reliably report
-// font glyph support. Override with PI_COMETIX_ICON_MODE when desired.
+// Auto keeps the original Nerd Font look outside Linux, uses ASCII on Linux,
+// and falls back to ordinary Unicode in Apple Terminal.
 const ICON_MODE = parseIconMode(process.env.PI_COMETIX_ICON_MODE);
 const SYMBOLS = getFooterSymbols(ICON_MODE);
 const ICONS = SYMBOLS.icons;

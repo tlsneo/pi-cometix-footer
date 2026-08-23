@@ -12,9 +12,9 @@ const containsPrivateUseCodePoint = (value: string): boolean =>
 		);
 	});
 
-test("uses printable ASCII symbols in conservative auto mode", () => {
-	assert.equal(resolveIconMode("auto"), "ascii");
-	const symbols = getFooterSymbols("auto");
+test("uses printable ASCII symbols for Linux auto mode", () => {
+	assert.equal(resolveIconMode("auto", {}, "linux"), "ascii");
+	const symbols = getFooterSymbols("auto", {}, "linux");
 	const values = [
 		...Object.values(symbols.icons),
 		symbols.thinkingSeparator,
@@ -38,6 +38,12 @@ test("uses printable ASCII symbols in conservative auto mode", () => {
 	assert.deepEqual(symbols.git, { clean: "+", dirty: "*", conflict: "!", ahead: "^", behind: "v" });
 	assert.deepEqual(symbols.tokens, { input: "^", output: "v" });
 	assert.equal(values.some(containsPrivateUseCodePoint), false);
+});
+
+test("preserves richer automatic icons outside Linux", () => {
+	assert.equal(resolveIconMode("auto", { TERM_PROGRAM: "Apple_Terminal" }, "darwin"), "unicode");
+	assert.equal(resolveIconMode("auto", { TERM_PROGRAM: "iTerm.app" }, "darwin"), "nerd");
+	assert.equal(resolveIconMode("auto", {}, "win32"), "nerd");
 });
 
 test("allows explicit richer icon modes", () => {
