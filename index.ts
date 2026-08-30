@@ -21,7 +21,7 @@ import { formatTps, TpsTracker } from "./tps.ts";
 // Standard Unicode/emoji only; no Nerd Font or platform guessing.
 const SYMBOLS = {
 	icons: {
-		model: "🤖",
+		model: "π",
 		dir: "📁",
 		git: "🌿",
 		ctx: "⚡",
