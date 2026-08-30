@@ -14,7 +14,7 @@ Look inspired by [CCometixLine](https://github.com/Haleclipse/CCometixLine) (MIT
 ![cometix footer demo](assets/demo.png)
 
 ```text
-π  GPT-5.6 Sol • max  |  > ~/agent/pi-cometix-footer  |  main ✓  |  2% 6.4k/372k  |  ↑13k ↓61 CH88.2%  |  󰄉 1m 23s · 42.3 tok/s  |  󰇁 0.284  |  MCP: 0/5 servers
+🤖  GPT-5.6 Sol • max  |  📁 ~/agent/pi-cometix-footer  |  🌿 main ✓  |  ⚡ 2% 6.4k/372k  |  📊 ↑13k ↓61 CH88.2%  |  ⏱️ 1m 23s · 42.3 tok/s  |  💰 0.284  |  MCP: 0/5 servers
 ```
 
 | Segment | What it shows | Color |
@@ -30,7 +30,7 @@ Look inspired by [CCometixLine](https://github.com/Haleclipse/CCometixLine) (MIT
 
 Segments are bold, separated by dim ` | `. The footer stays on one line when everything fits; on narrower terminals it greedily wraps between complete segments, preserving values such as cost and activity instead of clipping the right side. A single segment wider than the terminal is safely truncated. Resizing the terminal automatically reflows the layout.
 
-Icon mode defaults to `"auto"`: Linux uses the portable ASCII fallback, Apple Terminal uses Menlo-compatible Unicode symbols, and other environments preserve the original Nerd Font appearance. Every mode can also be selected explicitly.
+The footer uses one standard Unicode/emoji symbol set on every platform, with no Nerd Font dependency or platform-specific font guessing.
 
 ---
 
@@ -68,22 +68,11 @@ Edit the installed package (or a local clone), then `/reload`.
 
 | Knob | Where | Purpose |
 | --- | --- | --- |
-| `PI_COMETIX_ICON_MODE` | environment | `auto` (platform-aware default), `ascii`, `nerd`, `unicode`, or `emoji` |
 | `layoutFooterSegments` | `footer-layout.ts` | responsive, ANSI-safe segment wrapping and oversized-segment truncation |
 | `DEFAULT_SHOW_TPS` | top of `index.ts` | show latest-response TPS by default (`true`) |
-| `SYMBOL_SETS` | `icons.ts` | customize ASCII, Unicode, Nerd Font, or emoji symbols |
+| `SYMBOLS` | top of `index.ts` | customize the standard Unicode/emoji symbols |
 | `C.*` | color map | 16-color SGR codes per segment |
 | `GIT_TTL` | near git cache | git status refresh interval (ms, default `3000`) |
-
-To opt into richer symbols, start pi with one of:
-
-```bash
-PI_COMETIX_ICON_MODE=nerd pi
-PI_COMETIX_ICON_MODE=unicode pi
-PI_COMETIX_ICON_MODE=emoji pi
-```
-
-Nerd Font mode requires a compatible terminal font. Nerd Font cheatsheet: <https://www.nerdfonts.com/cheat-sheet>
 
 Local install for hacking:
 
@@ -97,9 +86,8 @@ pi install ./pi-cometix-footer
 ## Requirements
 
 - [pi](https://pi.dev) (peer: `@earendil-works/pi-coding-agent`, `@earendil-works/pi-tui`)
-- Linux needs no special font in default `"auto"` mode because it uses ASCII symbols
-- Apple Terminal automatically uses a Menlo-compatible Unicode fallback
-- Other environments retain the original Nerd Font appearance; use `PI_COMETIX_ICON_MODE=ascii` when a patched font is unavailable
+- A UTF-8 terminal with standard Unicode/emoji support
+- No Nerd Font required
 
 ---
 

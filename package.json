@@ -9,7 +9,6 @@
     "footer",
     "statusline",
     "terminal",
-    "nerd-fonts",
     "typescript",
     "cometix",
     "ccometixline"
@@ -31,7 +30,6 @@
     "index.ts",
     "footer-layout.ts",
     "duration.ts",
-    "icons.ts",
     "tps.ts",
     "assets",
     "README.md",

@@ -4,7 +4,7 @@
  * Borrows the "cometix" theme look from CCometixLine (MIT, Haleclipse):
  *   https://github.com/Haleclipse/CCometixLine
  *
- * Responsive layout with " | " separators and platform-aware icon fallback:
+ * Responsive layout with " | " separators and standard Unicode/emoji symbols:
  *   Model | Directory | Git(branch + state + sync) | Context% | Tokens | Cost | Task time + TPS
  *
  * Toggle with /cometix-footer (on by default), or toggle TPS with
@@ -16,14 +16,33 @@ import { type TUI } from "@earendil-works/pi-tui";
 import { isAbsolute, relative, resolve, sep } from "node:path";
 import { formatDuration } from "./duration.ts";
 import { layoutFooterSegments } from "./footer-layout.ts";
-import { getFooterSymbols, parseIconMode } from "./icons.ts";
 import { formatTps, TpsTracker } from "./tps.ts";
 
-// --- icon set ---------------------------------------------------------------
-// Auto keeps the original Nerd Font look outside Linux, uses ASCII on Linux,
-// and falls back to ordinary Unicode in Apple Terminal.
-const ICON_MODE = parseIconMode(process.env.PI_COMETIX_ICON_MODE);
-const SYMBOLS = getFooterSymbols(ICON_MODE);
+// Standard Unicode/emoji only; no Nerd Font or platform guessing.
+const SYMBOLS = {
+	icons: {
+		model: "🤖",
+		dir: "📁",
+		git: "🌿",
+		ctx: "⚡",
+		usage: "📊",
+		cost: "💰",
+		duration: "⏱️",
+	},
+	thinkingSeparator: " • ",
+	activitySeparator: " · ",
+	git: {
+		clean: "✓",
+		dirty: "●",
+		conflict: "⚠",
+		ahead: "↑",
+		behind: "↓",
+	},
+	tokens: {
+		input: "↑",
+		output: "↓",
+	},
+} as const;
 const ICONS = SYMBOLS.icons;
 const DEFAULT_SHOW_TPS = true;
 
