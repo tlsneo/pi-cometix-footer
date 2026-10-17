@@ -19,14 +19,14 @@ Look inspired by [CCometixLine](https://github.com/Haleclipse/CCometixLine) (MIT
 
 | Segment | What it shows | Color |
 | --- | --- | --- |
-| **Model** | Model name + thinking level (`• high`) | cyan · level uses pi palette |
+| **Model** | Model name + thinking level (`• high`) + optional gateway speed (`• ⚡ Fast` / `• ⚡⚡ Ultrafast`) | cyan · level uses pi palette · speed yellow |
 | **Directory** | CWD, `~`-relative | yellow icon / green path |
 | **Git** | Branch · clean `✓` / dirty `●` / conflict `⚠` · ahead `↑n` / behind `↓n` | blue |
 | **Context** | Window fill `pct tokens/window` | magenta → yellow (>70%) → red (>90%) |
 | **Tokens** | Session `↑in ↓out` + latest cache hit `CH%` | cyan |
 | **Cost** | Session cumulative USD cost reported by Pi; omitted when zero/unavailable | yellow |
 | **Activity** | Live task time (updated every second) + optional latest-response TPS; final values remain after the agent settles | magenta |
-| **Statuses** | Extension / MCP status lines (if any) | theme default |
+| **Statuses** | Extension / MCP status lines (if any), excluding gateway speed shown beside the model | theme default |
 
 Segments are bold, separated by dim ` | `. The footer stays on one line when everything fits; on narrower terminals it greedily wraps between complete segments, preserving values such as cost and activity instead of clipping the right side. A single segment wider than the terminal is safely truncated. Resizing the terminal automatically reflows the layout.
 
@@ -56,6 +56,12 @@ Footer and TPS are **on by default**. Toggle the footer or TPS independently:
 ```
 
 TPS uses the final output-token count divided by the elapsed time from the first streamed output delta to response completion, so time to first token is excluded. It is omitted when a provider does not stream output deltas or report valid output-token usage.
+
+### pi-ai-gateway speed
+
+When pi-ai-gateway publishes `ctx.ui.setStatus("ai-gateway-speed", "⚡ Fast" | "⚡⚡ Ultrafast" | undefined)`, the footer shows its text in yellow immediately after the thinking level (or model name when thinking is hidden), without repeating it among trailing statuses. This is the **requested speed tier for the current model**, not confirmation that the upstream provider has accepted or applied it. The footer only reads this status; it does not read gateway configuration.
+
+When pi-ai-gateway clears the status (off, model switch, or removal), the label disappears on the next render. Other extension statuses keep their existing behavior. Update **both pi-ai-gateway and pi-cometix-footer**, then run `/reload` to enable the integration.
 
 > **Migrating from a loose file?**  
 > If you previously copied `cometix-footer.ts` into `~/.pi/agent/extensions/`, remove that file first to avoid loading the footer twice.

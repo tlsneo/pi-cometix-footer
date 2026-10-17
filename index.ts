@@ -208,6 +208,11 @@ export default function (pi: ExtensionAPI) {
 					}
 
 					const home = process.env.HOME || process.env.USERPROFILE;
+					const extensionStatuses = Array.from(footerData.getExtensionStatuses().entries())
+						.sort(([a], [b]) => a.localeCompare(b))
+						.map(([key, text]) => [key, (text ?? "").replace(/[\r\n\t]/g, " ").replace(/ +/g, " ").trim()] as const)
+						.filter(([, text]) => text.length > 0);
+					const speedStatus = extensionStatuses.find(([key]) => key === "ai-gateway-speed")?.[1];
 
 					// model (+ thinking level, like pi's native "gpt-5.5 • xhigh")
 					const modelId = ctx.model?.name || ctx.model?.id || "no-model";
@@ -221,6 +226,9 @@ export default function (pi: ExtensionAPI) {
 						modelSeg = `\x1b[1;${C.cyan}m${ICONS.model}  ${modelId}${RESET}\x1b[2m${SYMBOLS.thinkingSeparator}${RESET}${lvlStr}${RESET}`;
 					} else {
 						modelSeg = paint(C.cyan, `${ICONS.model}  ${modelId}`);
+					}
+					if (speedStatus) {
+						modelSeg += `\x1b[2m${SYMBOLS.thinkingSeparator}${RESET}${paint(C.yellow, speedStatus)}`;
 					}
 
 					// directory
@@ -298,10 +306,9 @@ export default function (pi: ExtensionAPI) {
 
 					// Extension/package statuses participate as individual segments so
 					// narrow terminals can wrap between them instead of truncating all statuses.
-					const statusSegments = Array.from(footerData.getExtensionStatuses().entries())
-						.sort(([a], [b]) => a.localeCompare(b))
-						.map(([, text]) => (text ?? "").replace(/[\r\n\t]/g, " ").replace(/ +/g, " ").trim())
-						.filter((text) => text.length > 0);
+					const statusSegments = extensionStatuses
+						.filter(([key]) => key !== "ai-gateway-speed")
+						.map(([, text]) => text);
 					segs.push(...statusSegments);
 
 					return layoutFooterSegments(segs, width, SEG);
